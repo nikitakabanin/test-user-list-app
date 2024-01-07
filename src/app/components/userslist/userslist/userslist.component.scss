@@ -1,0 +1,13 @@
+.user-container {
+  margin: auto;
+  display: flex;
+  max-width: 100vw;
+  flex-wrap: wrap;
+  justify-content: left;
+  gap: 5px;
+}
+.btn-dialog {
+  position: fixed;
+  right: 70px;
+  bottom: 50px;
+}

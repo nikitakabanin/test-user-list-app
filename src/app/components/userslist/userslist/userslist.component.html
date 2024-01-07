@@ -1,0 +1,16 @@
+<div class="user-container">
+  <app-user-card
+    *ngFor="let user of userlist; let index = index"
+    [info]="user"
+    (editCard)="editCardDialog(user)"
+    (deleteCard)="deleteCard(index)"
+  ></app-user-card>
+</div>
+<button
+  mat-raised-button
+  color="accent"
+  class="btn-dialog"
+  (click)="createCardDialog()"
+>
+  Create user
+</button>
