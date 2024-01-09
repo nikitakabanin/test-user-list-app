@@ -12,12 +12,8 @@ export const userEffect = createEffect(
       ofType(UsersApiActions.loadUsers),
       switchMap(() =>
         api.getUsers().pipe(
-          map(
-            (result) => UsersApiActions.loadUsersSuccess({ users: result }),
-            catchError((error) =>
-              of(UsersApiActions.loadUsersFailed({ error }))
-            )
-          )
+          map((result) => UsersApiActions.loadUsersSuccess({ users: result })),
+          catchError((error) => of(UsersApiActions.loadUsersFailed({ error })))
         )
       )
     );
