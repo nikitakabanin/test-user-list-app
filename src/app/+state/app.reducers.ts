@@ -7,7 +7,7 @@ export interface State {
   loadStatus: 'init' | 'loading' | 'loaded' | 'failed';
 }
 const initialState: State = {
-  users: [],
+  users: [{ id: 1, email: 'asd', name: 'asd', username: 'f' }],
   loadStatus: 'init',
 };
 
@@ -40,8 +40,9 @@ export const usersFeature = createFeature({
       ...state,
       loadStatus: 'failed' as const,
     })),
-    on(UsersApiActions.loadUsersSuccess, (state) => ({
+    on(UsersApiActions.loadUsersSuccess, (state, { users }) => ({
       ...state,
+      users: users,
       loadStatus: 'loaded' as const,
     }))
   ),

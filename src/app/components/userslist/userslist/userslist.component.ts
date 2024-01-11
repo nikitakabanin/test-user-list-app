@@ -8,6 +8,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { UserlistDialogComponent } from '../../userlist-dialog/userlist-dialog.component';
 import { LocalStorageService } from '../../../services/local-storage.service';
+import { UsersFacade } from '../../../+state/app.facade';
 @Component({
   selector: 'app-userslist',
   standalone: true,
@@ -32,11 +33,14 @@ export class UserslistComponent implements OnDestroy {
 
   constructor(
     @Inject(LocalStorageService) private storageService: LocalStorageService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    @Inject(UsersFacade) private facade: UsersFacade
   ) {
-    this.users$ = storageService.userlistObservable$;
+    this.facade.loadUsers();
+    this.users$ = this.facade.users$;
     this.users$.pipe(takeUntil(this.unsubscribe$)).subscribe((result) => {
       this.userlist = result;
+      console.log(this.userlist);
       this.nextUniqueId === 0 ? (this.nextUniqueId = result.length) : 0;
     });
   }
@@ -47,7 +51,7 @@ export class UserslistComponent implements OnDestroy {
   createCardDialog() {
     const dialogRef = this.dialog.open(UserlistDialogComponent, {
       data: {
-        id: this.nextUniqueId++ + 1,
+        id: ++this.nextUniqueId,
         email: '',
         name: '',
         username: '',
@@ -55,7 +59,7 @@ export class UserslistComponent implements OnDestroy {
       autoFocus: true,
     });
     dialogRef.afterClosed().subscribe((result: IUser) => {
-      if (result) this.storageService.setCard(result);
+      if (result) this.facade.addUser(result);
       else this.nextUniqueId--;
     });
   }
@@ -68,11 +72,12 @@ export class UserslistComponent implements OnDestroy {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((result) => {
-        this.storageService.setCard(result);
+        if (result) this.facade.editUser(result);
       });
   }
 
-  deleteCard(index: number) {
-    this.storageService.deleteByIndex(index);
+  deleteCard(user: IUser) {
+    // this.storageService.deleteByIndex(index);
+    this.facade.deleteUser(user);
   }
 }

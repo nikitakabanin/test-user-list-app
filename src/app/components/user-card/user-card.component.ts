@@ -31,9 +31,6 @@ export class UserCardComponent {
   @Output() editCard: EventEmitter<void> = new EventEmitter<void>();
   @Output() deleteCard: EventEmitter<void> = new EventEmitter<void>();
   @HostBinding('class.hideComponent') hideComponent = false;
-  constructor(
-    @Inject(LocalStorageService) private storageService: LocalStorageService
-  ) {}
   toDelete() {
     this.deleteCard.emit();
   }

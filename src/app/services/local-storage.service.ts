@@ -25,13 +25,6 @@ export class LocalStorageService implements OnDestroy {
         localStorage.setItem(this.userListKey, JSON.stringify(result));
       });
   }
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-  private getUsersHttp() {
-    return this.userApiService.getUsers();
-  }
   public setUserlist(list: IUser[]) {
     this.userlistSubject$.next(list);
   }
@@ -52,5 +45,12 @@ export class LocalStorageService implements OnDestroy {
     if (index >= 0) list[index] = item;
     else list.push(item);
     this.userlistSubject$.next(list);
+  }
+  private getUsersHttp() {
+    return this.userApiService.getUsers();
+  }
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

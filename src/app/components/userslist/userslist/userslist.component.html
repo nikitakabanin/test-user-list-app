@@ -3,7 +3,7 @@
     *ngFor="let user of userlist; let index = index"
     [info]="user"
     (editCard)="editCardDialog(user)"
-    (deleteCard)="deleteCard(index)"
+    (deleteCard)="deleteCard(user)"
   ></app-user-card>
 </div>
 <button
