@@ -2,9 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { UserslistComponent } from './components/userslist/userslist/userslist.component';
-import { HttpClientModule } from '@angular/common/http';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { StoreModule } from '@ngrx/store';
+
 @Component({
   selector: 'app-root',
   standalone: true,

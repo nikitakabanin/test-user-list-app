@@ -3,18 +3,20 @@ import { provideRouter } from '@angular/router';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { provideStore } from '@ngrx/store';
+import { StoreModule, provideStore } from '@ngrx/store';
 import { usersFeature } from './+state/app.reducers';
 import { provideEffects } from '@ngrx/effects';
-import { userEffect$ } from './+state/app.effects';
+import * as effects from './+state/app.effects';
 import { HttpClientModule } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
+import { LocalStorageService } from './services/local-storage.service';
 export const appConfig: ApplicationConfig = {
   providers: [
+    LocalStorageService,
     provideRouter(routes),
     provideNoopAnimations(),
     provideStore({ [usersFeature.name]: usersFeature.reducer }),
-    provideEffects(),
+    provideEffects(effects),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),

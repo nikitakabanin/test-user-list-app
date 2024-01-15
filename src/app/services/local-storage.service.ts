@@ -3,20 +3,17 @@ import { IUser } from '../components/userslist/userslist/IUser';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { UserApiService } from './user-api.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class LocalStorageService implements OnDestroy {
   //change userlist only with subject
   private userListKey = 'userlist';
   private userlistSubject$ = new BehaviorSubject<IUser[]>(this.getUserlist());
   public readonly userlistObservable$ = this.userlistSubject$.asObservable();
   private unsubscribe$ = new Subject<void>();
-  private httpUsers = this.getUsersHttp();
 
   constructor(@Inject(UserApiService) private userApiService: UserApiService) {
     if (this.userlistSubject$.value.length === 0)
-      this.getUsersHttp()
+      this.getUsersWithHttp()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe((result) => this.userlistSubject$.next(result));
     this.userlistSubject$
@@ -29,26 +26,29 @@ export class LocalStorageService implements OnDestroy {
     this.userlistSubject$.next(list);
   }
   private getUserlist(): IUser[] {
-    return localStorage[this.userListKey] !== undefined &&
-      JSON.parse(localStorage[this.userListKey]).length !== 0
+    return localStorage[this.userListKey]
       ? JSON.parse(localStorage[this.userListKey])
       : [];
   }
-  public deleteByIndex(index: number) {
-    let list = this.userlistSubject$.getValue();
-    list = [...list.slice(0, index), ...list.slice(index + 1)];
-    this.userlistSubject$.next(list);
+  public deleteCard(item: IUser) {
+    this.userlistSubject$.next(
+      this.userlistSubject$.getValue().filter((e) => e.id !== item.id)
+    );
   }
   public setCard(item: IUser) {
-    const list = this.userlistSubject$.getValue();
+    const list = [...this.userlistSubject$.value];
     const index = list.findIndex((el) => el.id === item.id);
     if (index >= 0) list[index] = item;
     else list.push(item);
     this.userlistSubject$.next(list);
   }
-  private getUsersHttp() {
+  public clearUsers() {
+    localStorage[this.userListKey] = [];
+  }
+  private getUsersWithHttp() {
     return this.userApiService.getUsers();
   }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

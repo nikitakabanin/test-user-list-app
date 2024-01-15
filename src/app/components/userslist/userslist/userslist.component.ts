@@ -39,9 +39,11 @@ export class UserslistComponent implements OnDestroy {
     this.facade.loadUsers();
     this.users$ = this.facade.users$;
     this.users$.pipe(takeUntil(this.unsubscribe$)).subscribe((result) => {
-      this.userlist = result;
-      console.log(this.userlist);
-      this.nextUniqueId === 0 ? (this.nextUniqueId = result.length) : 0;
+      if (result) this.userlist = result;
+      else this.userlist = [];
+      this.nextUniqueId !== 0
+        ? (this.nextUniqueId = result[result.length - 1].id)
+        : 0;
     });
   }
   ngOnDestroy(): void {
@@ -73,11 +75,14 @@ export class UserslistComponent implements OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((result) => {
         if (result) this.facade.editUser(result);
+        else console.log(result);
       });
   }
 
   deleteCard(user: IUser) {
-    // this.storageService.deleteByIndex(index);
     this.facade.deleteUser(user);
+  }
+  clearUsers() {
+    this.facade.clearUser();
   }
 }

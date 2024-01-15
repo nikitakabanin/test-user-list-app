@@ -1,4 +1,9 @@
-import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import {
+  createAction,
+  createActionGroup,
+  emptyProps,
+  props,
+} from '@ngrx/store';
 import { IUser } from '../components/userslist/userslist/IUser';
 
 export const UsersApiActions = createActionGroup({
@@ -7,6 +12,9 @@ export const UsersApiActions = createActionGroup({
     'Load Users': emptyProps(),
     'Load Users Success': props<{ users: IUser[] }>(),
     'Load Users Failed': props<{ error: Error }>(),
+
+    'Update Local Storage': props<{ users: IUser[] }>(),
+    'Close App': emptyProps(),
   },
 });
 export const EditUsersActions = createActionGroup({
